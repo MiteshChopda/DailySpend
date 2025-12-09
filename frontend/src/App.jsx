@@ -1,44 +1,47 @@
-import { useState } from 'react'
-import './App.css'
-import InputsForm from './InputsForm'
+
+import { BrowserRouter, Routes, Route, useSearchParams } from "react-router-dom";
+import InputsForm from './components/InputsForm'
+import Dashboard from './components/Dashboard';
+import Navbar from './components/Navbar'
+import Container from '@mui/material/Container';
 
 
-function Toggle({handleToggle}) {
+function NotFound() {
   return (
-    <button
-      className='toggleButton rounded'
-      onClick={handleToggle}
-    >tgl</button>
+    <>
+      <h1>Page not found!</h1>
+    </>
   )
+}
+function AppContent() {
+  const [params] = useSearchParams();
+  const comp = params.get("comp");
+
+  switch (comp) {
+    case "dashboard":
+      return <Dashboard />;
+    case "new":
+      return <InputsForm />
+    default:
+      return <InputsForm />
+  }
 }
 
 function App() {
-  const [toDashboard, setToDashboard] = useState(false);
+  return (
+    <>
+      <Navbar />
+      <Container
+        sx={{ display: "block", margin: "0 auto", width: "100%" }}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<AppContent />} />
+          </Routes>
+        </BrowserRouter>
+      </Container>
+    </>
 
-  const handleToggle = (e) => {
-    setToDashboard(!toDashboard);
-  }
-
-  if (toDashboard) {
-    return (
-      <>
-        <Toggle handleToggle={handleToggle}/>
-        <h1>hii</h1>
-
-        {/* Dashdoard Component*/}
-      </>
-    )
-  }
-  else {
-    return (
-      <>
-        <Toggle handleToggle={handleToggle} />
-        <InputsForm handleToggle={handleToggle}></InputsForm>
-      </>
-    )
-
-  }
-
+  );
 }
 
 export default App
