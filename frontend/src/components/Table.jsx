@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 // import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Link from '@mui/material/Link';
+import IconButton from "@mui/material/IconButton";
 /*
 records:[
     {
@@ -24,7 +25,7 @@ records:[
     ...]
 */
 export default function SimpleTable({ records }) {
-    const [rows] = useState(records)
+    const [rows, setRows] = useState(records)
     const Columns = [
         {
             name: "Record Title",
@@ -48,6 +49,23 @@ export default function SimpleTable({ records }) {
         }
 
     ]
+    const handleDelete = (_id) => {
+
+        const id = _id
+        fetch('https://dst-api-two.vercel.app/api/records/delete/' + id, {
+            method: 'DELETE',
+        })
+            .then(res => { res.json(); })
+            .then(data => {
+                console.log("delete res:", data)
+                setRows((prevRows) =>
+                    prevRows.filter((row) => row._id !== id)
+                );
+                window.alert(id + "deleted!")
+            })
+            .catch(err => window.alert(err))
+
+    }
     return (
         <TableContainer component={Paper}>
             <Table
@@ -100,9 +118,12 @@ export default function SimpleTable({ records }) {
 
                             {/* action */}
                             <TableCell align="right">
-                                <Link underline="hover" color="primary" href="/new">
-                                <DeleteIcon />
-                                </Link>
+                                {/* <Link underline="hover" color="primary" href="/new">
+                                    <DeleteIcon />
+                                </Link> */}
+                                <IconButton color="primary" onClick={() => handleDelete(row._id)}>
+                                    <DeleteIcon />
+                                </IconButton>
                             </TableCell>
 
                         </TableRow>
