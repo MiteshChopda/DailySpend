@@ -16,6 +16,17 @@ const createRecord = async (req, res, next) => {
     }
 };
 
+const deleteRecord = async (req, res, next) => {
+    try {
+        await connectDB()
+        const id = req.params.id
+        const record = await Record.deleteOne({ _id: id })
+        res.status(201).json({ success: true, data: record });
+    } catch (err) {
+        next(err);
+    }
+};
+
 const getRecords = async (req, res, next) => {
     try {
         await connectDB()
@@ -40,7 +51,8 @@ const getRecord = async (req, res, next) => {
 };
 
 module.exports = {
-    createRecord, 
+    createRecord,
     getRecords,
-    getRecord
+    getRecord,
+    deleteRecord
 };

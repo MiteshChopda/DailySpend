@@ -66,6 +66,7 @@ export const connectDB = async () => {
 const router = express.Router();
 router.post('/create', controller.createRecord);
 router.get('/get', controller.getRecords);
+router.get('/delete/:id', controller.deleteRecord);
 router.get('/:id', controller.getRecord);
 
 app.use('/api/records', router)

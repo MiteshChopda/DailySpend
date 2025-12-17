@@ -19,12 +19,12 @@ import AddIcon from '@mui/icons-material/Add';
 const pages = [
     {
         "name": "New",
-        "link": "/?comp=new",
+        "link": "/DailySpend/?comp=new",
         "icon": AddIcon
     },
     {
         "name": "Dashboard",
-        "link": "/?comp=dashboard",
+        "link": "/DailySpend/?comp=dashboard",
         "icon": BarChartIcon
     },
 ];
@@ -45,7 +45,7 @@ function Navbar() {
             <Toolbar>
                 {/* Logo / Title */}
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                    <Link underline="hover" color="primary.white" href="/new">MyApp</Link>
+                    <Link underline="hover" color="primary.white" href="/DailySpend/?comp=new">DailySpend</Link>
                 </Typography>
 
                 {/* Desktop Menu */}

@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+// import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Link from '@mui/material/Link';
 /*
@@ -80,9 +80,8 @@ export default function SimpleTable({ records }) {
                             </TableCell>
 
                             {/* amount */}
-                            <TableCell sx={{ display: "flex", alignItems: "center" }} align="right">
-                                <CurrencyRupeeIcon fontSize="small" />
-                                <Typography >{row.amount}</Typography>
+                            <TableCell align="right">
+                                {row.amount}
                             </TableCell>
 
                             {/* change */}
