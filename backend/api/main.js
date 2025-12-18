@@ -2,7 +2,7 @@
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
-import controller from './controllers/record.controller'
+import { createRecord, getRecords, getRecord, deleteRecord } from './controllers/record.controller.js'
 
 const app = express();
 app.use(express.json());
@@ -20,10 +20,14 @@ if (process.env.isProduction) {
       (host && allowedHosts.includes(host)) ||
       (origin && allowedHosts.some(h => origin.includes(h)));
     if (!isAllowed) {
+      console.error(`client host:${host}\nclient origin:${origin}`);
       return res.status(403).json({ message: 'Access denied' });
     }
     next();
   });
+
+}
+if (process.env.isProduction) {
   const allowedOrigins = [
     `http://${process.env.FRONTEND_URL}`,
     `https://${process.env.FRONTEND_URL}`,
@@ -38,7 +42,6 @@ if (process.env.isProduction) {
 }
 
 
-
 export const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
@@ -51,10 +54,10 @@ export const connectDB = async () => {
 
 // routes
 const router = express.Router();
-router.post('/create', controller.createRecord);
-router.get('/get', controller.getRecords);
-router.delete('/delete/:id', controller.deleteRecord);
-router.get('/:id', controller.getRecord);
+router.post('/create', createRecord);
+router.get('/get', getRecords);
+router.delete('/delete/:id', deleteRecord);
+router.get('/:id', getRecord);
 
 app.use('/api/records', router)
 // Export the app for Vercel Serverless

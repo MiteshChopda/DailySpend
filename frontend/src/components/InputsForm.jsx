@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import {BACKEND_URL} from './config'
+import {BACKEND_URL} from '../config.js'
 // material UI
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';

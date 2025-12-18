@@ -1,5 +1,5 @@
-import { connectDB } from "../main";
-import Record from "../record.model";
+import { connectDB } from "../main.js";
+import Record from "../record.model.js";
 
 const createRecord = async (req, res, next) => {
     try {

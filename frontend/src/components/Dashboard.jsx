@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Table from './Table'
-import {BACKEND_URL} from './config'
+import {BACKEND_URL} from '../config'
 const Dashboard = () => {
 
     /*  api response:

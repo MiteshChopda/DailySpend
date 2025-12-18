@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import {BACKEND_URL} from '../config.js'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -72,7 +72,7 @@ export default function SimpleTable({ records }) {
 
     const handleDelete = (_id, title) => {
         const id = _id
-        fetch('https://dst-api-two.vercel.app/api/records/delete/' + id, {
+        fetch(`${BACKEND_URL}/api/records/delete/` + id, {
             method: 'DELETE',
         })
             .then(res => { res.json(); })
