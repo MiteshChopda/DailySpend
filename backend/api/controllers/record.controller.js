@@ -50,7 +50,7 @@ const getRecord = async (req, res, next) => {
     }
 };
 
-module.exports = {
+export {
     createRecord,
     getRecords,
     getRecord,

@@ -8,19 +8,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-
-app.use(
-  cors({
-    origin: allowedOrigins,
-  })
-);
-
-
 if (process.env.isProduction) {
   app.use((req, res, next) => {
     const allowedHosts = [
-      'xyz.com'
+      process.env.FRONTEND_URL
     ];
     const host = req.headers.host;
     const origin = req.headers.origin;
@@ -33,12 +24,9 @@ if (process.env.isProduction) {
     }
     next();
   });
-}
-
-if (process.env.isProduction) {
   const allowedOrigins = [
-    "http://xyz.com",
-    "https://xyz.com/",
+    `http://${process.env.FRONTEND_URL}`,
+    `https://${process.env.FRONTEND_URL}`,
   ];
   app.use(
     cors({
@@ -70,4 +58,4 @@ router.get('/:id', controller.getRecord);
 
 app.use('/api/records', router)
 // Export the app for Vercel Serverless
-module.exports = app;
+export default app;

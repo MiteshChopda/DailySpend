@@ -20,8 +20,7 @@ const recordSchema = new mongoose.Schema(
             type: Date,
             required: true,
         }
-
     }
 );
 
-module.exports = mongoose.model('Record', recordSchema);
+export default mongoose.model('Record', recordSchema);
