@@ -101,7 +101,7 @@ function InputsForm() {
 
           <FormControl
             sx={{ display: "flex", marginTop: 2, justifyContent: "center" }}>
-            <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+            <FormLabel id="demo-row-radio-buttons-group-label"></FormLabel>
             <RadioGroup
               row
               aria-labelledby="demo-row-radio-buttons-group-label"

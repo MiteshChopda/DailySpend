@@ -51,13 +51,13 @@ function Navbar() {
                 {/* Desktop Menu */}
                 <Box sx={{ display: { xs: "none", md: "flex" } }}>
                     {pages.map((page) => (
-                        <Button
-                            key={page.name}
-                            color="inherit">
-                            <Link underline="hover" color="primary.white" href={page.link}>
+                        <Link underline="hover" color="primary.white" href={page.link}>
+                            <Button
+                                key={page.name}
+                                color="inherit">
                                 {<page.icon />}
-                            </Link>
-                        </Button>
+                            </Button>
+                        </Link>
                     ))}
                 </Box>
 
