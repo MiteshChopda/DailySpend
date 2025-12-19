@@ -97,7 +97,14 @@ export default function SimpleTable({ records }) {
                                     </Typography>
                                 </TableCell>
                                 {/* date */}
-                                <TableCell align="right">{new Date(row.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</TableCell>
+                                <TableCell align="right">{
+                                    new Date(row.created_at)
+                                        .toLocaleDateString("en-GB", {
+                                            day: "numeric",
+                                            month: "short",
+                                            year: "numeric"
+                                        })}
+                                </TableCell>
                                 {/* action */}
                                 <TableCell align="right">
                                     <IconButton color="primary" onClick={() => { handleDeleteClickOpen(row) }}>
