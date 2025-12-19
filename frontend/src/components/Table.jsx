@@ -66,7 +66,7 @@ export default function SimpleTable({ records }) {
 
     return (
         <>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ mb: 2 }}>
                 <Table sx={{ gap: 0 }} size="small" aria-label="a dense table">
                     <TableHead>
                         <TableRow>
@@ -122,6 +122,7 @@ export default function SimpleTable({ records }) {
                 onChange={handlePageChange}
                 variant="outlined"
                 shape="rounded"
+                sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
             />
             <Dialog
                 open={openDeleteDialog}
