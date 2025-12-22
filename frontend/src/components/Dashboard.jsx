@@ -1,51 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import Table from './Table'
-import {BACKEND_URL} from '../config'
-const Dashboard = () => {
+import { useEffect, useState } from "react";
+import RecordsTable from "./Table";
+import { BACKEND_URL } from "../config";
+import { Alert } from "@mui/material";
 
-    /*  api response:
-
-    {
-        success: true || false,
-        data: [
-            {
-                amount: 1250,
-                changeInBalance: "spent",
-                created_at: "2025-12-12T08:22:01.536Z",
-                title: "Campus Sliders",
-                __v: 0,
-                _id: "693bd0a9fb6b02509adcae03"
-            },
-            ...
-        ]
-    }
-    */
-    const [transactions, setTransactions] = useState([]);
-    const [dataIsLoaded, setDataIsLoaded] = useState(false);
+export default function Dashboard() {
+    const [records, setRecords] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(`${BACKEND_URL}/api/records/get`)
-            .then((res) => res.json())
+        fetch(`${BACKEND_URL}/api/records/get`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        })
+            .then((res) => {
+                if (!res.ok) throw new Error("Unauthorized");
+                return res.json();
+            })
             .then((data) => {
-                console.log("json: ", data);
-                setTransactions(data.data);
-                setDataIsLoaded(true);
-            }).catch(e => { console.log(e); console.error(e); });
+                setRecords(data.data);
+                console.log("Dashboard: ", data);
+            })
+            .catch((err) => setError(err.message));
     }, []);
 
+    if (error) return <Alert severity="error">{error}</Alert>;
 
-    if (!dataIsLoaded) {
-        return (
-            <div>
-                <h1>Please wait some time....</h1>
-            </div>
-        );
-    }
-
-    return (
-        <>
-            <Table records={transactions} ></Table>
-        </>
-    )
+    return <RecordsTable _records={records} />;
 }
-export default Dashboard;

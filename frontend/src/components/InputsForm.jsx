@@ -1,151 +1,118 @@
-import { useState } from 'react'
-import {BACKEND_URL} from '../config.js'
-// material UI
-import Container from '@mui/material/Container';
-import TextField from '@mui/material/TextField';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import Button from '@mui/material/Button';
-import SendIcon from '@mui/icons-material/Send';
-import Box from "@mui/material/Box";
+import { useState } from "react";
+import { BACKEND_URL } from "../config";
 
-function InputsForm() {
+import {
+  Container,
+  TextField,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  Button,
+  Box,
+  Alert,
+} from "@mui/material";
+
+export default function InputsForm() {
   const [formData, setFormData] = useState({
-    title: '',
-    amount: 10,
+    title: "",
+    amount: "",
     changeInBalance: "spent",
-    created_at: new Date().toISOString()
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setFormData(values => ({ ...values, [name]: value }))
-  };
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-    setIsSubmitting(true)
-    const url = `${BACKEND_URL}/api/records/create`
-    const data = formData
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    if (Number(formData.amount) <= 0) {
+      setError("Amount must be greater than zero");
+      return;
+    }
+
+    setLoading(true);
 
     try {
-      const response = await fetch(url, {
-        method: 'POST', // Specify the method
+      const res = await fetch(`${BACKEND_URL}/api/records/create`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json', // Indicate the data type
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(data), // Convert JavaScript object to JSON string
+        body: JSON.stringify(formData),
       });
-      const res_data = await response.json()
-      if (res_data.success == true) {
-        console.log("Record Created Successfuly.");
-        setIsSubmitting(false);
-      }
-      setFormData({ title: '', amount: 10, changeInBalance: "spent" })
+      console.log(res);
+
+
+      if (!res.ok) throw new Error("Failed to create record");
+
+      setFormData({ title: "", amount: "", changeInBalance: "spent" });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-    catch (err) {
-      console.error(err)
-      window.alert("Error occurred!", err);
-      setFormData({ title: '', amount: 10, changeInBalance: "spent" })
-    }
-  }
+  };
 
   return (
-    <>
-      <Container
-        sx={{ display: "flex", justifyContent: "center" }}>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ display: "flex", flexDirection: "column", gap: 2, width: 300 }}
-          method="POST"
-        >
+    <Container sx={{ display: "flex", justifyContent: "center" }}>
+      <Box component="form" onSubmit={handleSubmit} sx={{ width: 300 }}>
+        {error && <Alert severity="error">{error}</Alert>}
 
+        <TextField
+          label="Title"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          required
+          fullWidth
+          sx={{ mt: 2 }}
+        />
 
-          {/* Title */}
-          <TextField
-            sx={{ marginTop: 4 }}
-            className='rounded box-shadow'
-            variant="outlined"
-            id='title'
-            name='title'
-            type="text"
-            label="Title"
-            placeholder="Enter title here"
-            value={formData.title}
+        <TextField
+          label="Amount"
+          name="amount"
+          type="number"
+          value={formData.amount}
+          onChange={handleChange}
+          required
+          fullWidth
+          sx={{ mt: 2 }}
+        />
+
+        <RadioGroup row sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+          <FormControlLabel
+            value="spent"
+            control={<Radio />}
+            label="Spent"
+            name="changeInBalance"
+            checked={formData.changeInBalance === "spent"}
             onChange={handleChange}
-            required={true}
-            disabled={isSubmitting}
           />
-
-          {/* Amount */}
-          <TextField
-            sx={{ marginTop: 4 }}
-            className='rounded box-shadow'
-            variant="outlined"
-            id='amount'
-            type="number"
-            label="Amount"
-            name='amount'
-            required={true}
-            value={formData.amount}
+          <FormControlLabel
+            value="earned"
+            control={<Radio />}
+            label="Earned"
+            name="changeInBalance"
+            checked={formData.changeInBalance === "earned"}
             onChange={handleChange}
-            disabled={isSubmitting} />
+          />
+        </RadioGroup>
 
-          {/* Change in balance */}
-
-          <FormControl
-            sx={{ display: "flex", marginTop: 2, justifyContent: "center" }}>
-            <FormLabel id="demo-row-radio-buttons-group-label"></FormLabel>
-            <RadioGroup
-              row
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name="row-radio-buttons-group"
-              sx={{ display: "flex", justifyContent: "center" }}
-            >
-              {/* Spent */}
-              <FormControlLabel
-                name="changeInBalance"
-                id="spent"
-                value="spent"
-                control={<Radio />}
-                label="Spent"
-                checked={formData.changeInBalance === "spent"}
-                onChange={handleChange}
-                disabled={isSubmitting} />
-
-              {/* Added */}
-              <FormControlLabel
-                name="changeInBalance"
-                id="added"
-                value="added"
-                control={<Radio />}
-                checked={formData.changeInBalance === "added"}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                label="Added" />
-            </RadioGroup>
-          </FormControl>
-
-          {/* Submit */}
-          <Button variant="contained"
-            // sx={{ width:"100%" }}
-            type="submit"
-            value={isSubmitting ? "wait.." : "submit"}
-            disabled={isSubmitting}
-            endIcon={<SendIcon />}
-          >
-            Submit
-          </Button>
-        </Box>
-      </Container>
-    </>
-  )
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          disabled={loading}
+          sx={{ mt: 2 }}
+        >
+          {loading ? "Saving..." : "Submit"}
+        </Button>
+      </Box>
+    </Container>
+  );
 }
-
-export default InputsForm

@@ -1,58 +1,34 @@
-import { connectDB } from "../main.js";
-import Record from "../record.model.js";
+import Record from "../models/record.model.js";
 
-const createRecord = async (req, res, next) => {
-    try {
-        await connectDB()
-        const record = await Record.create({
-            title: req.body.title,
-            amount: req.body.amount,
-            changeInBalance: req.body.changeInBalance,
-            created_at: new Date().toISOString()
-        });
-        res.status(201).json({ success: true, data: record });
-    } catch (err) {
-        next(err);
-    }
+export const createRecord = async (req, res) => {
+  const record = await Record.create({
+    title: req.body.title,
+    amount: req.body.amount,
+    changeInBalance: req.body.changeInBalance,
+    user: req.userId
+  });
+  res.status(201).json({ success: true, data: record });
 };
 
-const deleteRecord = async (req, res, next) => {
-    try {
-        await connectDB()
-        const id = req.params.id
-        const record = await Record.deleteOne({ _id: id })
-        res.status(201).json({ success: true, data: record });
-    } catch (err) {
-        next(err);
-    }
+export const getRecords = async (req, res) => {
+  const records = await Record.find({ user: req.userId });
+  res.json({ success: true, data: records });
 };
 
-const getRecords = async (req, res, next) => {
-    try {
-        await connectDB()
-        const records = await Record.find();
-        res.json({ success: true, data: records });
-    } catch (err) {
-        next(err);
-    }
+export const getRecord = async (req, res) => {
+  const record = await Record.findOne({
+    _id: req.params.id,
+    user: req.userId
+  });
+  if (!record)
+    return res.status(404).json({ message: "Not found" });
+  res.json({ success: true, data: record });
 };
 
-const getRecord = async (req, res, next) => {
-    try {
-        await connectDB()
-        const record = await Record.findById(req.params.id);
-        if (!record) {
-            return res.status(404).json({ success: false, message: 'User not found' });
-        }
-        res.json({ success: true, data: record });
-    } catch (err) {
-        next(err);
-    }
-};
-
-export {
-    createRecord,
-    getRecords,
-    getRecord,
-    deleteRecord
+export const deleteRecord = async (req, res) => {
+  await Record.deleteOne({
+    _id: req.params.id,
+    user: req.userId
+  });
+  res.json({ success: true });
 };

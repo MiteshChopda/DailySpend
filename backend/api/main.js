@@ -1,37 +1,39 @@
-
-import express from 'express'
-import cors from 'cors'
-import mongoose from 'mongoose'
-import { createRecord, getRecords, getRecord, deleteRecord } from './controllers/record.controller.js'
+import express from "express";
+import cors from "cors";
+// routes imports
+import recordRoutes from "./routes/record.routes.js";
+import authRoutes from "./routes/auth.routes.js";
+// middleware imports
+import { authMiddleware } from "./middleware/auth.middleware.js";
+import connectDB from "./db.js";
 
 const app = express();
+
+// Connect DB once per cold start
+await connectDB();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-if (process.env.isProduction) {
-  app.use((req, res, next) => {
-    const allowedHosts = [
-      process.env.FRONTEND_URL
-    ];
-    const host = req.headers.host;
-    const origin = req.headers.origin;
-    // Allow if host OR origin matches
-    const isAllowed =
-      (host && allowedHosts.includes(host)) ||
-      (origin && allowedHosts.some(h => origin.includes(h)));
-    if (!isAllowed) {
-      console.error(`client host:${host}\nclient origin:${origin}`);
-      return res.status(403).json({ message: 'Access denied' });
-    }
-    next();
-  });
+// CORS
+if (process.env.isProduction === "true") {
+  const frontendUrl = process.env.FRONTEND_URL;
 
-}
-if (process.env.isProduction) {
-  const allowedOrigins = [
-    `http://${process.env.FRONTEND_URL}`,
-    `https://${process.env.FRONTEND_URL}`,
-  ];
+  if (!frontendUrl) {
+    throw new Error(
+      "FRONTEND_URL environment variable is not set, but is required in production for CORS."
+    );
+  }
+
+  const allowedOrigins = [];
+
+  if (frontendUrl.startsWith("http://") || frontendUrl.startsWith("https://")) {
+    allowedOrigins.push(frontendUrl);
+  } else {
+    // Allow both http and https when only host is provided
+    allowedOrigins.push(`https://${frontendUrl}`, `http://${frontendUrl}`);
+  }
+
   app.use(
     cors({
       origin: allowedOrigins,
@@ -41,24 +43,8 @@ if (process.env.isProduction) {
   app.use(cors());
 }
 
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/records", authMiddleware, recordRoutes);
 
-export const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('MongoDB connected');
-  } catch (err) {
-    console.error('MongoDB connection failed', err);
-    process.exit(1);
-  }
-};
-
-// routes
-const router = express.Router();
-router.post('/create', createRecord);
-router.get('/get', getRecords);
-router.delete('/delete/:id', deleteRecord);
-router.get('/:id', getRecord);
-
-app.use('/api/records', router)
-// Export the app for Vercel Serverless
 export default app;
