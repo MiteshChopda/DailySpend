@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import {
   Container,
   Box,
@@ -8,7 +8,11 @@ import {
   Alert,
   Stack,
 } from "@mui/material";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL } from "../config.ts";
+
+interface RegisterResponse {
+  message?: string;
+}
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -18,13 +22,13 @@ export default function Register() {
     confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  const handleChange = (e) =>
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
@@ -51,7 +55,7 @@ export default function Register() {
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json().catch(() => ({}));
+      const data: RegisterResponse = await res.json().catch(() => ({}));
 
       if (!res.ok) {
         throw new Error(data?.message || "Failed to register");
@@ -65,7 +69,7 @@ export default function Register() {
         confirmPassword: "",
       });
     } catch (err) {
-      setError(err.message || "Unexpected error");
+      setError(err instanceof Error ? err.message : "Unexpected error");
     } finally {
       setLoading(false);
     }
@@ -147,5 +151,4 @@ export default function Register() {
     </Container>
   );
 }
-
 

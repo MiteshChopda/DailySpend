@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Express } from "express";
 import cors from "cors";
 // routes imports
 import recordRoutes from "./routes/record.routes.js";
@@ -7,7 +7,7 @@ import authRoutes from "./routes/auth.routes.js";
 import { authMiddleware } from "./middleware/auth.middleware.js";
 import connectDB from "./db.js";
 
-const app = express();
+const app: Express = express();
 
 // Connect DB once per cold start
 await connectDB();
@@ -25,7 +25,7 @@ if (process.env.isProduction === "true") {
     );
   }
 
-  const allowedOrigins = [];
+  const allowedOrigins: string[] = [];
 
   if (frontendUrl.startsWith("http://") || frontendUrl.startsWith("https://")) {
     allowedOrigins.push(frontendUrl);
@@ -48,3 +48,4 @@ app.use("/api/auth", authRoutes);
 app.use("/api/records", authMiddleware, recordRoutes);
 
 export default app;
+

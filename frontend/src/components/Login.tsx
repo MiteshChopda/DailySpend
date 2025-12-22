@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   Container,
@@ -9,7 +9,17 @@ import {
   Alert,
   Stack,
 } from "@mui/material";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL } from "../config.ts";
+
+interface LoginResponse {
+  token: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  message?: string;
+}
 
 export default function Login() {
   const [params] = useSearchParams();
@@ -20,12 +30,12 @@ export default function Login() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e) =>
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
@@ -39,7 +49,7 @@ export default function Login() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json().catch(() => ({}));
+      const data: LoginResponse = await res.json().catch(() => ({}));
 
       if (!res.ok) {
         throw new Error(data?.message || "Failed to login");
@@ -61,7 +71,7 @@ export default function Login() {
       const target = `/DailySpend/?comp=${encodeURIComponent(redirectTo)}`;
       window.location.href = target;
     } catch (err) {
-      setError(err.message || "Unexpected error");
+      setError(err instanceof Error ? err.message : "Unexpected error");
     } finally {
       setLoading(false);
     }
@@ -121,5 +131,4 @@ export default function Login() {
     </Container>
   );
 }
-
 

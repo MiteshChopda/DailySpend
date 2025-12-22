@@ -9,8 +9,14 @@ import {
   Divider,
 } from "@mui/material";
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export default function Profile() {
-  const user = useMemo(() => {
+  const user = useMemo<User | null>(() => {
     try {
       const raw = localStorage.getItem("user");
       return raw ? JSON.parse(raw) : null;
@@ -62,5 +68,4 @@ export default function Profile() {
     </Container>
   );
 }
-
 

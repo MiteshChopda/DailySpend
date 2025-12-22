@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route, useSearchParams } from "react-router-dom";
-import InputsForm from "./components/InputsForm";
-import Dashboard from "./components/Dashboard";
-import Home from "./components/Home";
-import Navbar from "./components/Navbar";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Profile from "./components/Profile";
+import InputsForm from "./components/InputsForm.tsx";
+import Dashboard from "./components/Dashboard.tsx";
+import Home from "./components/Home.tsx";
+import Navbar from "./components/Navbar.tsx";
+import Login from "./components/Login.tsx";
+import Register from "./components/Register.tsx";
+import Profile from "./components/Profile.tsx";
 import Container from "@mui/material/Container";
 
 function AppContent() {
@@ -40,3 +40,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
