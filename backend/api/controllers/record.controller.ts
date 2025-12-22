@@ -1,6 +1,7 @@
 import { Response } from "express";
-import Record from "../models/record.model.js";
+import Record, { IRecord } from "../models/record.model.js";
 import { AuthRequest } from "../middleware/auth.middleware.js";
+import { ApiSuccessResponse } from "../types/response.types.js";
 
 interface CreateRecordBody {
   title?: string;
@@ -17,13 +18,14 @@ export const createRecord = async (
     return;
   }
 
-  const record = await Record.create({
+  const record: IRecord = await Record.create({
     title: req.body.title!,
     amount: req.body.amount!,
     changeInBalance: req.body.changeInBalance!,
     user: req.userId,
   });
-  res.status(201).json({ success: true, data: record });
+  const response: ApiSuccessResponse<IRecord> = { success: true, data: record };
+  res.status(201).json(response);
 };
 
 export const getRecords = async (
@@ -35,8 +37,9 @@ export const getRecords = async (
     return;
   }
 
-  const records = await Record.find({ user: req.userId });
-  res.json({ success: true, data: records });
+  const records: IRecord[] = await Record.find({ user: req.userId });
+  const response: ApiSuccessResponse<IRecord[]> = { success: true, data: records };
+  res.json(response);
 };
 
 export const getRecord = async (
@@ -48,7 +51,7 @@ export const getRecord = async (
     return;
   }
 
-  const record = await Record.findOne({
+  const record: IRecord | null = await Record.findOne({
     _id: req.params.id,
     user: req.userId,
   });
@@ -56,7 +59,8 @@ export const getRecord = async (
     res.status(404).json({ message: "Not found" });
     return;
   }
-  res.json({ success: true, data: record });
+  const response: ApiSuccessResponse<IRecord> = { success: true, data: record };
+  res.json(response);
 };
 
 export const deleteRecord = async (
@@ -72,6 +76,7 @@ export const deleteRecord = async (
     _id: req.params.id,
     user: req.userId,
   });
-  res.json({ success: true });
+  const response: ApiSuccessResponse = { success: true, data: null };
+  res.json(response);
 };
 

@@ -10,22 +10,18 @@ import {
   Stack,
 } from "@mui/material";
 import { BACKEND_URL } from "../config.ts";
+import { LoginResponse, ApiErrorResponse } from "../types/api.types.ts";
 
-interface LoginResponse {
-  token: string;
-  user?: {
-    id: string;
-    name: string;
-    email: string;
-  };
-  message?: string;
+interface LoginFormData {
+  email: string;
+  password: string;
 }
 
 export default function Login() {
   const [params] = useSearchParams();
   const redirectTo = params.get("redirect") || "new";
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
   });
@@ -41,7 +37,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
+      const res: Response = await fetch(`${BACKEND_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +45,7 @@ export default function Login() {
         body: JSON.stringify(formData),
       });
 
-      const data: LoginResponse = await res.json().catch(() => ({}));
+      const data: LoginResponse | ApiErrorResponse = await res.json().catch(() => ({} as any));
 
       if (!res.ok) {
         throw new Error(data?.message || "Failed to login");

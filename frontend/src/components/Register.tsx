@@ -9,13 +9,17 @@ import {
   Stack,
 } from "@mui/material";
 import { BACKEND_URL } from "../config.ts";
+import { RegisterResponse, ApiErrorResponse } from "../types/api.types.ts";
 
-interface RegisterResponse {
-  message?: string;
+interface RegisterFormData {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
 }
 
 export default function Register() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     name: "",
     email: "",
     password: "",
@@ -41,13 +45,13 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const payload = {
+      const payload: Omit<RegisterFormData, "confirmPassword"> = {
         name: formData.name,
         email: formData.email,
         password: formData.password,
       };
 
-      const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
+      const res: Response = await fetch(`${BACKEND_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +59,7 @@ export default function Register() {
         body: JSON.stringify(payload),
       });
 
-      const data: RegisterResponse = await res.json().catch(() => ({}));
+      const data: RegisterResponse | ApiErrorResponse = await res.json().catch(() => ({} as any));
 
       if (!res.ok) {
         throw new Error(data?.message || "Failed to register");

@@ -7,11 +7,12 @@ import Login from "./components/Login.tsx";
 import Register from "./components/Register.tsx";
 import Profile from "./components/Profile.tsx";
 import Container from "@mui/material/Container";
+import { ReactElement } from "react";
 
-function AppContent() {
+function AppContent(): ReactElement {
   const [params] = useSearchParams();
-  const comp = params.get("comp");
-  const isLoggedIn = Boolean(localStorage.getItem("token"));
+  const comp: string | null = params.get("comp");
+  const isLoggedIn: boolean = Boolean(localStorage.getItem("token"));
 
   // when user is NOT logged in, only allow Home, Login and Register
   if (!isLoggedIn) {
@@ -28,7 +29,7 @@ function AppContent() {
   return <InputsForm />;
 }
 
-export default function App() {
+export default function App(): ReactElement {
   return (
     <BrowserRouter>
       <Navbar />

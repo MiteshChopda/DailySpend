@@ -17,14 +17,7 @@ import {
   Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-
-interface Record {
-  _id: string;
-  title: string;
-  amount: number;
-  changeInBalance: "spent" | "added";
-  created_at: string;
-}
+import { Record } from "../types/api.types.ts";
 
 interface RecordsTableProps {
   _records: Record[];
@@ -58,14 +51,15 @@ export default function RecordsTable({ _records }: RecordsTableProps) {
     setOpenDeleteDialog(false);
   };
 
-  const deleteRecord = async (id: string) => {
+  const deleteRecord = async (id: string): Promise<void> => {
+    const token: string | null = localStorage.getItem("token");
     await fetch(`${BACKEND_URL}/api/records/delete/${id}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${token || ""}`,
       },
     });
-    setRows(rows.filter((r) => r._id !== id));
+    setRows(rows.filter((r: Record) => r._id !== id));
   };
 
   return (

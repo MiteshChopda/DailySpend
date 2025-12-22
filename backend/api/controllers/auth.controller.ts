@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { AuthSuccessResponse } from "../types/response.types.js";
 
 interface RegisterBody {
   name?: string;
@@ -65,9 +66,10 @@ export const login = async (
     expiresIn: "7d",
   });
 
-  res.json({
+  const response: AuthSuccessResponse = {
     token,
     user: { id: user._id.toString(), name: user.name, email: user.email },
-  });
+  };
+  res.json(response);
 };
 

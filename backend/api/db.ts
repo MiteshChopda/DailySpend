@@ -18,11 +18,11 @@ const connectDB = async (): Promise<typeof mongoose> => {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    const mongoUri = process.env.MONGO_URI;
+    const mongoUri: string | undefined = process.env.MONGO_URI;
     if (!mongoUri) {
       throw new Error("MONGO_URI environment variable is not set");
     }
-    cached.promise = mongoose.connect(mongoUri).then((mongoose) => {
+    cached.promise = mongoose.connect(mongoUri).then((mongoose: typeof mongoose) => {
       return mongoose;
     });
   }

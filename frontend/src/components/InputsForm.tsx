@@ -12,11 +12,23 @@ import {
   Alert,
 } from "@mui/material";
 
+interface InputsFormData {
+  title: string;
+  amount: string;
+  changeInBalance: "spent" | "added";
+}
+
+interface CreateRecordPayload {
+  title: string;
+  amount: number;
+  changeInBalance: "spent" | "added";
+}
+
 export default function InputsForm() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<InputsFormData>({
     title: "",
     amount: "",
-    changeInBalance: "spent" as "spent" | "added",
+    changeInBalance: "spent",
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -43,16 +55,17 @@ export default function InputsForm() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${BACKEND_URL}/api/records/create`, {
+      const res: Response = await fetch(`${BACKEND_URL}/api/records/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
-          ...formData,
+          title: formData.title,
           amount: Number(formData.amount),
-        }),
+          changeInBalance: formData.changeInBalance,
+        } as CreateRecordPayload),
       });
       console.log(res);
 

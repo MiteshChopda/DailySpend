@@ -27,11 +27,11 @@ interface Page {
 function Navbar() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const openMenu = (event: MouseEvent<HTMLElement>) => {
+  const openMenu = (event: MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget);
   };
 
-  const closeMenu = () => {
+  const closeMenu = (): void => {
     setAnchorEl(null);
   };
 
@@ -42,11 +42,11 @@ function Navbar() {
 
   // keep navbar in sync when token changes (storage events or custom dispatch)
   useEffect(() => {
-    const handleStorage = (e: StorageEvent) => {
+    const handleStorage = (e: StorageEvent): void => {
       if (e.key === "token") setIsLoggedIn(Boolean(e.newValue));
     };
 
-    const handleAuthEvent = () =>
+    const handleAuthEvent = (): void =>
       setIsLoggedIn(Boolean(localStorage.getItem("token")));
 
     window.addEventListener("storage", handleStorage);

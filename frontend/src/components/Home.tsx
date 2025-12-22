@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import {
   Container,
   Typography,
@@ -10,7 +10,7 @@ import {
 import LoginIcon from "@mui/icons-material/Login";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
-function Home() {
+function Home(): ReactElement {
   return (
     <Container maxWidth="md" sx={{ py: 6 }}>
       <Box sx={{ textAlign: "center", mb: 4 }}>

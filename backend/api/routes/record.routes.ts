@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import {
   createRecord,
   getRecords,
@@ -6,7 +6,7 @@ import {
   deleteRecord,
 } from "../controllers/record.controller.js";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.post("/create", createRecord);
 router.get("/get", getRecords);

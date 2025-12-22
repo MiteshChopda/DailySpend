@@ -8,24 +8,19 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+import { User } from "../types/api.types.ts";
 
 export default function Profile() {
   const user = useMemo<User | null>(() => {
     try {
-      const raw = localStorage.getItem("user");
-      return raw ? JSON.parse(raw) : null;
+      const raw: string | null = localStorage.getItem("user");
+      return raw ? (JSON.parse(raw) as User) : null;
     } catch {
       return null;
     }
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     window.dispatchEvent(new Event("authChange"));

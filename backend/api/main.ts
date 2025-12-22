@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // CORS
 if (process.env.isProduction === "true") {
-  const frontendUrl = process.env.FRONTEND_URL;
+  const frontendUrl: string | undefined = process.env.FRONTEND_URL;
 
   if (!frontendUrl) {
     throw new Error(
@@ -48,4 +48,3 @@ app.use("/api/auth", authRoutes);
 app.use("/api/records", authMiddleware, recordRoutes);
 
 export default app;
-
