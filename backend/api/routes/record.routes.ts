@@ -14,4 +14,3 @@ router.get("/:id", getRecord);
 router.delete("/delete/:id", deleteRecord);
 
 export default router;
-
