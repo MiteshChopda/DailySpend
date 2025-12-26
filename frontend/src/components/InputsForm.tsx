@@ -16,12 +16,14 @@ interface InputsFormData {
   title: string;
   amount: string;
   changeInBalance: "spent" | "added";
+  time: Date;
 }
 
 interface CreateRecordPayload {
   title: string;
   amount: number;
   changeInBalance: "spent" | "added";
+  time: Date;
 }
 
 export default function InputsForm() {
@@ -29,6 +31,7 @@ export default function InputsForm() {
     title: "",
     amount: "",
     changeInBalance: "spent",
+    time: new Date()
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -65,13 +68,14 @@ export default function InputsForm() {
           title: formData.title,
           amount: Number(formData.amount),
           changeInBalance: formData.changeInBalance,
+          time: formData.time,
         } as CreateRecordPayload),
       });
       console.log(res);
 
       if (!res.ok) throw new Error("Failed to create record");
 
-      setFormData({ title: "", amount: "", changeInBalance: "spent" });
+      setFormData({ title: "", amount: "", changeInBalance: "spent", time: new Date() });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
@@ -123,6 +127,8 @@ export default function InputsForm() {
           />
         </RadioGroup>
 
+        <DatePicker></DatePicker>
+
         <Button
           type="submit"
           variant="contained"
@@ -135,5 +141,39 @@ export default function InputsForm() {
       </Box>
     </Container>
   );
+}
+
+export const DatePicker = () => {
+  return (
+    <Box
+      sx={{
+        color: "primary",
+        display: "flex",
+        justifyContent: "center",
+        mt: 2,
+        "& input": {
+          padding: "0.5rem 0.6rem",
+          width: "100%",
+          borderRadius: "10px",
+          border: "1px solid #616263",
+          boxSizing: "content-box"
+
+        }
+      }}
+    >
+
+      {/* value={new Date().toISOString().split(":").slice(0, 2).join((":"))} */}
+      <input
+        type="datetime-local"
+        id="dateInput"
+        value={new Date(
+          new Date().getTime() - new Date().getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .slice(0, 16)
+        }
+      />
+    </Box>
+  )
 }
 

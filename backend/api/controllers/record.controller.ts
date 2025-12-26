@@ -7,6 +7,7 @@ interface CreateRecordBody {
   title?: string;
   amount?: number;
   changeInBalance?: "spent" | "added";
+  time?: Date
 }
 
 export const createRecord = async (
@@ -22,6 +23,7 @@ export const createRecord = async (
     title: req.body.title!,
     amount: req.body.amount!,
     changeInBalance: req.body.changeInBalance!,
+    time: req.body.time,
     user: req.userId,
   });
   const response: ApiSuccessResponse<IRecord> = { success: true, data: record };

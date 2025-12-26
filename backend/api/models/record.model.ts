@@ -5,6 +5,7 @@ interface IRecord {
   amount: number;
   changeInBalance: "spent" | "added";
   user: Types.ObjectId;
+  time: Date,
   created_at?: Date;
 }
 
@@ -16,6 +17,7 @@ const recordSchema = new Schema<IRecord>({
     enum: ["spent", "added"],
     required: true,
   },
+  time: { type: Date, required: true },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",

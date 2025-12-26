@@ -4,6 +4,7 @@ export interface Record {
   title: string;
   amount: number;
   changeInBalance: "spent" | "added";
+  time: Date;
   created_at: string;
 }
 
