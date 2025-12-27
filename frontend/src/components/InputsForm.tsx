@@ -16,14 +16,14 @@ interface InputsFormData {
   title: string;
   amount: string;
   changeInBalance: "spent" | "added";
-  time: Date;
+  time: Date | string;
 }
 
 interface CreateRecordPayload {
   title: string;
   amount: number;
   changeInBalance: "spent" | "added";
-  time: Date;
+  time: Date | string;
 }
 
 export default function InputsForm() {
@@ -31,7 +31,11 @@ export default function InputsForm() {
     title: "",
     amount: "",
     changeInBalance: "spent",
-    time: new Date()
+    time: new Date(
+      new Date().getTime() - new Date().getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .slice(0, 16)
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -127,7 +131,10 @@ export default function InputsForm() {
           />
         </RadioGroup>
 
-        <DatePicker></DatePicker>
+        <DatePicker
+          value={formData.time}
+          handleChange={handleChange}
+        />
 
         <Button
           type="submit"
@@ -143,7 +150,10 @@ export default function InputsForm() {
   );
 }
 
-export const DatePicker = () => {
+export const DatePicker = ({ value, handleChange }: {
+  value: Date | string,
+  handleChange: (e: ChangeEvent<HTMLInputElement>) => void
+}) => {
   return (
     <Box
       sx={{
@@ -164,14 +174,11 @@ export const DatePicker = () => {
 
       {/* value={new Date().toISOString().split(":").slice(0, 2).join((":"))} */}
       <input
+        name="time"
         type="datetime-local"
+        onChange={handleChange}
         id="dateInput"
-        value={new Date(
-          new Date().getTime() - new Date().getTimezoneOffset() * 60000
-        )
-          .toISOString()
-          .slice(0, 16)
-        }
+        value={value}
       />
     </Box>
   )
