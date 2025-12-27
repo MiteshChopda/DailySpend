@@ -10,6 +10,9 @@ import {
   Button,
   Box,
   Alert,
+  FormControl,
+  OutlinedInput,
+  InputLabel,
 } from "@mui/material";
 
 interface InputsFormData {
@@ -79,7 +82,16 @@ export default function InputsForm() {
 
       if (!res.ok) throw new Error("Failed to create record");
 
-      setFormData({ title: "", amount: "", changeInBalance: "spent", time: new Date() });
+      setFormData({
+        title: "",
+        amount: "",
+        changeInBalance: "spent",
+        time: new Date(
+          new Date().getTime() - new Date().getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .slice(0, 16),
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
@@ -164,22 +176,23 @@ export const DatePicker = ({ value, handleChange }: {
         "& input": {
           padding: "0.5rem 0.6rem",
           width: "100%",
-          borderRadius: "10px",
-          border: "1px solid #616263",
-          boxSizing: "content-box"
-
         }
       }}
     >
-
-      {/* value={new Date().toISOString().split(":").slice(0, 2).join((":"))} */}
-      <input
-        name="time"
-        type="datetime-local"
-        onChange={handleChange}
-        id="dateInput"
-        value={value}
-      />
+      <FormControl fullWidth sx={{ mt: 2 }}>
+        <InputLabel shrink htmlFor="time">
+          Date & Time
+        </InputLabel>
+        <OutlinedInput
+          sx={{ p: 1 }}
+          id="time"
+          name="time"
+          type="datetime-local"
+          value={value}
+          onChange={handleChange}
+          label="Date & Time"
+        />
+      </FormControl>
     </Box>
   )
 }
