@@ -1,11 +1,11 @@
 // API Response Types
 export interface Record {
-  _id: string;
   title: string;
   amount: number;
   changeInBalance: "spent" | "added";
   time: Date;
-  created_at: string;
+  category: "Food" | "Travel" | "Shopping";
+  created_at?: Date;
 }
 
 export interface RecordsResponse {
