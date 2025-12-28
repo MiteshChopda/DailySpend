@@ -4,8 +4,6 @@ import { BACKEND_URL } from "../config.ts";
 import {
   Container,
   TextField,
-  Radio,
-  RadioGroup,
   FormControlLabel,
   Button,
   Box,
@@ -15,7 +13,11 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 interface InputsFormData {
   title: string;
@@ -49,7 +51,7 @@ export default function InputsForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: ChangeEvent<any>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
@@ -134,30 +136,19 @@ export default function InputsForm() {
           sx={{ mt: 2 }}
         />
 
-        <RadioGroup
-          row
-          sx={{ mt: 2, display: "flex", justifyContent: "center" }}
-          name="changeInBalance"
-          value={formData.changeInBalance}
-          onChange={handleChange}
-        >
-          <FormControlLabel
-            value="spent"
-            control={<Radio />}
-            label="Spent"
-          />
-          <FormControlLabel
-            value="added"
-            control={<Radio />}
-            label="Earned"
-          />
-        </RadioGroup>
-
-        <BasicSelect
-          value={formData.category}
-          handleChange={handleChange}
-        />
-
+        {/* changeInBalance & category */}
+        <Box
+          sx={{
+            display: "flex",
+            mt: 2,
+            justifyContent: "center",
+            alignItems: "center",
+            "&> *": { px: 1 }
+          }}>
+          <ToggleChangeInBalance formData={formData} setFormData={setFormData} />
+          <CategorySelect value={formData.category}
+            handleChange={handleChange} />
+        </Box>
         <DatePicker
           value={formData.time}
           handleChange={handleChange}
@@ -177,13 +168,42 @@ export default function InputsForm() {
   );
 }
 
-export function BasicSelect({ value, handleChange }: {
+function ToggleChangeInBalance({ formData, setFormData }: { formData: InputsFormData, setFormData: any }) {
+  function handleToggle(e: ChangeEvent<any>) {
+    if (e.target.value != null) {
+      setFormData({ ...formData, ["changeInBalance"]: e.target.value });
+    }
+  }
+  return (
+    <ToggleButtonGroup
+      sx={{ display: "flex", justifyContent: "center", width: "100%" }}
+      value={formData.changeInBalance}
+      exclusive
+      onChange={handleToggle}
+    >
+      <ToggleButton
+        fullWidth
+        value="added" >
+        <AddIcon sx={{ pointerEvents: "none" }} />
+      </ToggleButton>
+      <ToggleButton
+        fullWidth
+        value="spent" >
+        <RemoveIcon sx={{ pointerEvents: "none" }} />
+      </ToggleButton>
+    </ToggleButtonGroup >
+
+  );
+}
+
+
+export function CategorySelect({ value, handleChange }: {
   value: string,
   handleChange: any,  //(event: ChangeEvent<HTMLInputElement>) => void,
 }) {
 
   return (
-    <Box sx={{ minWidth: 120, mt: 2 }}>
+    <Box sx={{ minWidth: 120, width: "100%" }}>
       <FormControl fullWidth required>
         <InputLabel id="category">Category</InputLabel>
         <Select
