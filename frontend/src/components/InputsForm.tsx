@@ -21,7 +21,7 @@ interface InputsFormData {
   title: string;
   amount: string;
   changeInBalance: "spent" | "added";
-  category: "Food" | "Travel" | "Shopping" | "None";
+  category: "Food" | "Travel" | "Shopping" | "";
   time: Date | string;
 }
 
@@ -38,7 +38,7 @@ export default function InputsForm() {
     title: "",
     amount: "",
     changeInBalance: "spent",
-    category: "None",
+    category: "",
     time: new Date(
       new Date().getTime() - new Date().getTimezoneOffset() * 60000
     )
@@ -86,7 +86,7 @@ export default function InputsForm() {
         title: "",
         amount: "",
         changeInBalance: "spent",
-        category: "None",
+        category: "",
         time: new Date(
           new Date().getTime() - new Date().getTimezoneOffset() * 60000
         )
@@ -194,7 +194,6 @@ export function BasicSelect({ value, handleChange }: {
           label="Category"
           onChange={handleChange}
         >
-          <MenuItem value={"None"}>None</MenuItem>
           <MenuItem value={"Travel"}>Travel</MenuItem>
           <MenuItem value={"Food"}>Food</MenuItem>
           <MenuItem defaultChecked value={"Other"}>Other</MenuItem>
