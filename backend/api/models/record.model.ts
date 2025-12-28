@@ -5,19 +5,34 @@ interface IRecord {
   amount: number;
   changeInBalance: "spent" | "added";
   user: Types.ObjectId;
-  time: Date,
+  time: Date;
+  category: "Food" | "Travel" | "Shopping" | "Other";
   created_at?: Date;
 }
 
 const recordSchema = new Schema<IRecord>({
-  title: { type: String, required: true, trim: true },
-  amount: { type: Number, required: true },
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  amount: {
+    type: Number,
+    required: true
+  },
   changeInBalance: {
     type: String,
     enum: ["spent", "added"],
     required: true,
   },
-  time: { type: Date, required: true },
+  category: {
+    type: String,
+    enum: ["Food", "Travel", "Shopping", "Other"],
+  },
+  time: {
+    type: Date,
+    required: true
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
