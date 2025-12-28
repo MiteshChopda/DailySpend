@@ -4,7 +4,7 @@ export interface Record {
   amount: number;
   changeInBalance: "spent" | "added";
   time: Date;
-  category: "Food" | "Travel" | "Shopping";
+  category: "Food" | "Travel" | "Shopping" | "Other";
   created_at?: Date;
 }
 

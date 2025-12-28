@@ -23,7 +23,7 @@ interface InputsFormData {
   title: string;
   amount: string;
   changeInBalance: "spent" | "added";
-  category: "Food" | "Travel" | "Shopping" | "";
+  category: "Food" | "Travel" | "Shopping" | "Other" | "";
   time: Date | string;
 }
 
@@ -216,6 +216,7 @@ export function CategorySelect({ value, handleChange }: {
         >
           <MenuItem value={"Travel"}>Travel</MenuItem>
           <MenuItem value={"Food"}>Food</MenuItem>
+          <MenuItem value={"Shopping"}>Shopping</MenuItem>
           <MenuItem defaultChecked value={"Other"}>Other</MenuItem>
         </Select>
       </FormControl>

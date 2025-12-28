@@ -6,7 +6,7 @@ interface IRecord {
   changeInBalance: "spent" | "added";
   user: Types.ObjectId;
   time: Date;
-  category: "Food" | "Travel" | "Shopping";
+  category: "Food" | "Travel" | "Shopping" | "Other";
   created_at?: Date;
 }
 
@@ -27,7 +27,7 @@ const recordSchema = new Schema<IRecord>({
   },
   category: {
     type: String,
-    enum: ["Food", "Travel", "Shopping"],
+    enum: ["Food", "Travel", "Shopping", "Other"],
   },
   time: {
     type: Date,
