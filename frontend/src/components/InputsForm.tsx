@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent } from "react";
+import { useState, FormEvent, ChangeEvent, useEffect } from "react";
 import { BACKEND_URL } from "../config.ts";
 
 import {
@@ -13,12 +13,15 @@ import {
   FormControl,
   OutlinedInput,
   InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 
 interface InputsFormData {
   title: string;
   amount: string;
   changeInBalance: "spent" | "added";
+  category: "Food" | "Travel" | "Shopping" | "None";
   time: Date | string;
 }
 
@@ -26,6 +29,7 @@ interface CreateRecordPayload {
   title: string;
   amount: number;
   changeInBalance: "spent" | "added";
+  category: string;
   time: Date | string;
 }
 
@@ -34,6 +38,7 @@ export default function InputsForm() {
     title: "",
     amount: "",
     changeInBalance: "spent",
+    category: "None",
     time: new Date(
       new Date().getTime() - new Date().getTimezoneOffset() * 60000
     )
@@ -44,14 +49,9 @@ export default function InputsForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+  const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const handleRadioChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setFormData({
-      ...formData,
-      changeInBalance: e.target.value as "spent" | "added",
-    });
+  }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -86,6 +86,7 @@ export default function InputsForm() {
         title: "",
         amount: "",
         changeInBalance: "spent",
+        category: "None",
         time: new Date(
           new Date().getTime() - new Date().getTimezoneOffset() * 60000
         )
@@ -99,9 +100,17 @@ export default function InputsForm() {
     }
   };
 
+  useEffect(() => {
+    console.log(formData);
+
+  }, [formData])
+
   return (
-    <Container sx={{ display: "flex", justifyContent: "center" }}>
-      <Box component="form" onSubmit={handleSubmit} sx={{ width: 300 }}>
+    <Container
+      sx={{ display: "flex", justifyContent: "center" }}
+    >
+      <Box component="form" onSubmit={handleSubmit} sx={{ width: 300 }}
+      >
         {error && <Alert severity="error">{error}</Alert>}
 
         <TextField
@@ -128,8 +137,9 @@ export default function InputsForm() {
         <RadioGroup
           row
           sx={{ mt: 2, display: "flex", justifyContent: "center" }}
+          name="changeInBalance"
           value={formData.changeInBalance}
-          onChange={handleRadioChange}
+          onChange={handleChange}
         >
           <FormControlLabel
             value="spent"
@@ -142,6 +152,11 @@ export default function InputsForm() {
             label="Earned"
           />
         </RadioGroup>
+
+        <BasicSelect
+          value={formData.category}
+          handleChange={handleChange}
+        />
 
         <DatePicker
           value={formData.time}
@@ -158,7 +173,34 @@ export default function InputsForm() {
           {loading ? "Saving..." : "Submit"}
         </Button>
       </Box>
-    </Container>
+    </Container >
+  );
+}
+
+export function BasicSelect({ value, handleChange }: {
+  value: string,
+  handleChange: any,  //(event: ChangeEvent<HTMLInputElement>) => void,
+}) {
+
+  return (
+    <Box sx={{ minWidth: 120, mt: 2 }}>
+      <FormControl fullWidth required>
+        <InputLabel id="category">Category</InputLabel>
+        <Select
+          name="category"
+          labelId="category"
+          id="category"
+          value={value}
+          label="Category"
+          onChange={handleChange}
+        >
+          <MenuItem value={"None"}>None</MenuItem>
+          <MenuItem value={"Travel"}>Travel</MenuItem>
+          <MenuItem value={"Food"}>Food</MenuItem>
+          <MenuItem defaultChecked value={"Other"}>Other</MenuItem>
+        </Select>
+      </FormControl>
+    </Box >
   );
 }
 
