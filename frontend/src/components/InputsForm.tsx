@@ -4,7 +4,6 @@ import { BACKEND_URL } from "../config.ts";
 import {
   Container,
   TextField,
-  FormControlLabel,
   Button,
   Box,
   Alert,
@@ -16,8 +15,9 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+
+import Icons from './Icons.ts'
+
 
 interface InputsFormData {
   title: string;
@@ -145,7 +145,9 @@ export default function InputsForm() {
             alignItems: "center",
             "&> *": { px: 1 }
           }}>
+
           <ToggleChangeInBalance formData={formData} setFormData={setFormData} />
+
           <CategorySelect value={formData.category}
             handleChange={handleChange} />
         </Box>
@@ -154,6 +156,7 @@ export default function InputsForm() {
           handleChange={handleChange}
         />
 
+        {/* Submit */}
         <Button
           type="submit"
           variant="contained"
@@ -176,23 +179,32 @@ function ToggleChangeInBalance({ formData, setFormData }: { formData: InputsForm
   }
   return (
     <ToggleButtonGroup
-      sx={{ display: "flex", justifyContent: "center", width: "100%" }}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        pl: 0,
+        width: "100%",
+        "& .tgl-btn": { p: 2 },
+      }}
       value={formData.changeInBalance}
       exclusive
       onChange={handleToggle}
     >
       <ToggleButton
-        fullWidth
-        value="added" >
-        <AddIcon sx={{ pointerEvents: "none" }} />
-      </ToggleButton>
-      <ToggleButton
+        className="tgl-btn"
         fullWidth
         value="spent" >
-        <RemoveIcon sx={{ pointerEvents: "none" }} />
+        <Icons.Remove sx={{ pointerEvents: "none" }} />
       </ToggleButton>
-    </ToggleButtonGroup >
 
+      <ToggleButton
+        className="tgl-btn"
+        fullWidth
+        value="added" >
+        <Icons.Add sx={{ pointerEvents: "none" }} />
+      </ToggleButton>
+
+    </ToggleButtonGroup >
   );
 }
 
@@ -203,7 +215,7 @@ export function CategorySelect({ value, handleChange }: {
 }) {
 
   return (
-    <Box sx={{ minWidth: 120, width: "100%" }}>
+    <Box sx={{ minWidth: 120, width: "100%", pr: 0 }}>
       <FormControl fullWidth required>
         <InputLabel id="category">Category</InputLabel>
         <Select
@@ -213,11 +225,29 @@ export function CategorySelect({ value, handleChange }: {
           value={value}
           label="Category"
           onChange={handleChange}
+          sx={{ display: "flex" }}
         >
-          <MenuItem value={"Travel"}>Travel</MenuItem>
-          <MenuItem value={"Food"}>Food</MenuItem>
-          <MenuItem value={"Shopping"}>Shopping</MenuItem>
-          <MenuItem defaultChecked value={"Other"}>Other</MenuItem>
+          <MenuItem
+            value={"Travel"}>
+            <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+              <Icons.Taxi />&nbsp;Travel
+            </Box>
+          </MenuItem>
+          <MenuItem value={"Food"}>
+            <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+              <Icons.Food />&nbsp;Food
+            </Box>
+          </MenuItem>
+          <MenuItem value={"Shopping"}>
+            <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+              <Icons.Shopping />&nbsp;Shopping
+            </Box>
+          </MenuItem>
+          <MenuItem defaultChecked value={"Other"}>
+            <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+              Other
+            </Box>
+          </MenuItem>
         </Select>
       </FormControl>
     </Box >
