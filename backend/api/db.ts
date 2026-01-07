@@ -1,4 +1,7 @@
 import mongoose, { Mongoose } from "mongoose";
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 declare global {
   // eslint-disable-next-line no-var
