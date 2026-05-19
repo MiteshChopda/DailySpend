@@ -11,6 +11,8 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "@types/mongoose": "^5.11.97",
+    "express": "^5.2.1",
+    "mongoose": "^9.6.2"
   }
 }

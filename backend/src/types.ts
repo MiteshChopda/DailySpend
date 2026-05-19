@@ -1,31 +1,15 @@
 export type expenseReqType = {
     amount: number;
     date: Date;
+    category:'Food'| 'Transport'| 'Shopping'| 'Travel'| 'Entertainment'| 'Utils'| 'Other' ; 
     description?: string;
-    category: [
-        "Food",
-        "Transport",
-        "Shopping",
-        "Bills/Utils",
-        "Travel",
-        "Entertainment",
-        "Other"
-    ];
     lastUpdated?: Date;
 }
 
 export type Expense = {
     amount: number;
     date: Date;
+    category:'Food'| 'Transport'| 'Shopping'| 'Travel'| 'Entertainment'| 'Utils'| 'Other';
     description?: string;
-    category: [
-        "Food",
-        "Transport",
-        "Shopping",
-        "Bills/Utils",
-        "Travel",
-        "Entertainment",
-        "Other"
-    ];
     lastUpdated?: Date;
 }
